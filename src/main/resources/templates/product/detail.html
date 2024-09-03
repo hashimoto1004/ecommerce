@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品詳細</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="@{/css/product-detail.css}" rel="stylesheet">
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- 左側に画像 -->
+        <div class="col-md-6">
+            <img th:src="@{${product.images[0].imageUrl}}
+            " class="img-fluid" th:alt="${product.name}">
+        </div>
+
+        <!-- 右側に商品情報 -->
+        <form class="col-md-6" th:action="@{/cart/add}" method="POST">
+            <!-- hiddenフィールドにstock_idを設定 -->
+            <input type="hidden" id="productId" name="productId" th:value="${product.id}">
+            <!-- hiddenフィールドにstock_idを設定 -->
+            <input type="hidden" id="stockId" name="stockId">
+
+            <h2 class="fw-bold" th:text="${product.name}">ランニングシューズ</h2>
+            <p th:text="${product.description}">軽量で通気性のあるランニングシューズ</p>
+            <p id="productPrice" class="text-secondary" th:text="'¥' + ${#numbers.formatInteger(product.price, 3, 'COMMA')} + ' (include tax)'" th:data-price="${product.price}">¥10,000</p>
+
+            <!-- サイズ選択 -->
+            <div class="mb-3">
+                <label for="sizeSelect" class="form-label">サイズ</label>
+                <select class="form-select" id="sizeSelect" onchange="updateStock()">
+                    <option th:each="stock : ${product.stocks}" th:value="${stock.sizeValue}" th:text="${stock.sizeValue} + ' cm'">25.0 cm</option>
+                </select>
+            </div>
+
+            <!-- 在庫数表示 -->
+            <div class="mb-3">
+                <p>在庫数: <span id="quantity"></span></p>
+            </div>
+
+            <!-- 個数選択（プルダウン） -->
+            <div class="mb-3">
+                <label for="selectedQuantity" class="form-label">個数</label>
+                <select class="form-select" id="selectedQuantity" name="selectedQuantity" onchange="calculatePrice()">
+                    <!-- JavaScriptでオプションを動的に生成 -->
+                </select>
+            </div>
+
+            <!-- カートに追加ボタン -->
+            <button class="btn btn-primary btn-lg w-100">カートに追加</button>
+        </form>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+<script th:inline="javascript">
+    window.stocks = /*[[${product.stocks}]]*/ [];
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/product-detail.js}"></script>
+</body>
+</html>

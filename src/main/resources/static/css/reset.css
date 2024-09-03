@@ -1,0 +1,11 @@
+/* リンクのデフォルトスタイルを解除 */
+a {
+    color: inherit; /* 文字色を親要素に合わせる */
+    text-decoration: none; /* 下線を消す */
+}
+
+/* ホバー時のスタイル */
+a:hover {
+    color: inherit; /* ホバー時も文字色を変えない */
+    text-decoration: none; /* 下線を表示しない */
+}
